@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">LoginSystem</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="register">REGISTER</string>
+    <string name="msg_toast_error_user_pass">User or Pass can not be empty</string>
+    <string name="login">LOGIN</string>
+    <string name="msg_error_user_pass_login">Your user or pass is incorrect, please try again</string>
+    <string name="welcome_activity_msg">Welcome usernameUsedToRegister</string>
+    <string name="activity_welcome_msg_">Welcome</string>
+</resources>
