@@ -43,6 +43,10 @@ public class AlbumViewModel extends ViewModel {
         currentPage++;
         return currentPage;
     }
+    public int decrementPage() {
+        currentPage--;
+        return currentPage;
+    }
 
     public AlbumViewModel() {
         this.albumResponseModels = new ArrayList<>();

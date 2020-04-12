@@ -146,6 +146,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
      */
     private void getNextAlbumRequestToGitHub() {
         progressBar.setVisibility(View.VISIBLE);
+        statusMessage.setVisibility(View.GONE);
+
         viewModel.getPresenter().getAlbum(viewModel.incrementPage());
     }
 
@@ -170,7 +172,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         statusMessage.setText(getString(R.string.error_in_the_request_back));
 
         Utils.showToast(MainActivity.this, getString(R.string.error_in_the_request), Toast.LENGTH_LONG);
+        //Allow us to try again
+        viewModel.decrementPage();
+        viewModel.setLoading(false);
+
     }
+
     /**
      * If the list is empty when a request has been executed the presenter call this method
      */
@@ -181,8 +188,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         statusMessage.setText(getString(R.string.empty_list));
         recyclerView.setVisibility(View.GONE);
     }
+
     /**
      * If there was not errors when a request has been executed the presenter call this method
+     *
      * @param githubResponse Is albumList that came from the server
      */
     @Override
@@ -198,7 +207,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
     /**
      * Method that is call before the activity is destroyed
-     * @param  bundle Bundle where we are want to save information
+     *
+     * @param bundle Bundle where we are want to save information
      */
 
     @Override
