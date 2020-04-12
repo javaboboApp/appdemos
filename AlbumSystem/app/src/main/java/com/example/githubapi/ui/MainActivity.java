@@ -245,4 +245,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
     }
 
+    @Override
+    protected void onDestroy() {
+        viewModel.getPresenter().detachView();
+        super.onDestroy();
+    }
 }
