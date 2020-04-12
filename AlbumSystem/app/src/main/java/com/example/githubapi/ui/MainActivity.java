@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,12 +41,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     private TextView statusMessage;
     private GithubAdapter githubAdapter;
     private AlbumViewModel viewModel;
-
+    private Button tryAgain;
     private final String TAG_STATUS_MSG = "STATUS_MSG";
 
     private final String TAG_PROGRESSBAR_VISIBLE = "PROGRESSBAR_VISIBLE";
     private final String TAG_RECYCLERVIEW_VISIBLE = "RECYCLERVIEW_VISIBLE";
     private final String TAG_STATUS_MESSAGE_VISIBLE = "STATUS_MESSAGE_VISIBLE";
+    private final String TAG_TRY_AGAIN_VISIBLE = "TRY_AGAIN_VISIBLE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         setContentView(R.layout.activity_main);
         initViews();
         initScrollListener();
+        initListerners();
         initViewModel();
         initPresenter();
         initAdapter();
@@ -62,6 +65,18 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         } else {
             recoveryVisibilityInfo(savedInstanceState);
         }
+    }
+
+    /**
+     * This method is used to init the  the listeners
+     */
+    private void initListerners() {
+        tryAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getNextAlbumRequestToGitHub();
+            }
+        });
     }
 
     /**
@@ -85,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         progressBar.setVisibility(savedInstanceState.getInt(TAG_PROGRESSBAR_VISIBLE));
         recyclerView.setVisibility(savedInstanceState.getInt(TAG_RECYCLERVIEW_VISIBLE));
         statusMessage.setVisibility(savedInstanceState.getInt(TAG_STATUS_MESSAGE_VISIBLE));
+        tryAgain.setVisibility(savedInstanceState.getInt(TAG_TRY_AGAIN_VISIBLE));
     }
 
     /**
@@ -147,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     private void getNextAlbumRequestToGitHub() {
         progressBar.setVisibility(View.VISIBLE);
         statusMessage.setVisibility(View.GONE);
+        tryAgain.setVisibility(View.GONE);
         viewModel.getPresenter().getAlbum(viewModel.getCurrentPage());
     }
 
@@ -158,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         progressBar = findViewById(R.id.progress_bar);
         statusMessage = findViewById(R.id.status_msg);
+        tryAgain = findViewById(R.id.retry);
     }
 
     /**
@@ -165,13 +183,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
      */
     @Override
     public void stateError() {
+        recyclerView.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
         statusMessage.setVisibility(View.VISIBLE);
-        //If the recyclerview is visible the user is not going to see that).
+        tryAgain.setVisibility(View.VISIBLE);
+
         statusMessage.setText(getString(R.string.error_in_the_request_back));
 
         Utils.showToast(MainActivity.this, getString(R.string.error_in_the_request), Toast.LENGTH_LONG);
-        //Allow us to try again
+        //Reset loading property
         viewModel.setLoading(false);
 
     }
@@ -183,6 +203,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     public void stateEmpty() {
         progressBar.setVisibility(View.GONE);
         statusMessage.setVisibility(View.VISIBLE);
+        tryAgain.setVisibility(View.GONE);
+
         statusMessage.setText(getString(R.string.empty_list));
         recyclerView.setVisibility(View.GONE);
     }
@@ -196,6 +218,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     public void stateSucess(List<AlbumResponseModel> githubResponse) {
         progressBar.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
+        tryAgain.setVisibility(View.GONE);
+
         int insertIndex = viewModel.getAlbumResponseModels().size();
         viewModel.addAll(githubResponse);
         githubAdapter.notifyItemRangeInserted(insertIndex, githubResponse.size());
@@ -216,7 +240,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         bundle.putInt(TAG_RECYCLERVIEW_VISIBLE, recyclerView.getVisibility());
         bundle.putInt(TAG_STATUS_MESSAGE_VISIBLE, statusMessage.getVisibility());
         bundle.putInt(TAG_PROGRESSBAR_VISIBLE, progressBar.getVisibility());
+        bundle.putInt(TAG_TRY_AGAIN_VISIBLE, tryAgain.getVisibility());
         bundle.putString(TAG_STATUS_MSG, statusMessage.getText().toString());
+
     }
 
 }
