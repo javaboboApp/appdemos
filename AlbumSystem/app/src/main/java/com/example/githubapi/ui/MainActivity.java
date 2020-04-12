@@ -147,8 +147,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     private void getNextAlbumRequestToGitHub() {
         progressBar.setVisibility(View.VISIBLE);
         statusMessage.setVisibility(View.GONE);
-
-        viewModel.getPresenter().getAlbum(viewModel.incrementPage());
+        viewModel.getPresenter().getAlbum(viewModel.getCurrentPage());
     }
 
     /**
@@ -173,7 +172,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
         Utils.showToast(MainActivity.this, getString(R.string.error_in_the_request), Toast.LENGTH_LONG);
         //Allow us to try again
-        viewModel.decrementPage();
         viewModel.setLoading(false);
 
     }
@@ -202,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         viewModel.addAll(githubResponse);
         githubAdapter.notifyItemRangeInserted(insertIndex, githubResponse.size());
         viewModel.setLoading(false);
+        viewModel.incrementToNextPage();
     }
 
 

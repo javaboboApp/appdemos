@@ -12,8 +12,8 @@ public class AlbumViewModel extends ViewModel {
     private ArrayList<AlbumResponseModel> albumResponseModels;
     private MainActivityContract.Presenter presenter;
 
-    //By default is 0
-    private int currentPage;
+    //By default is 1
+    private int currentPage = 1;
     //By default is false
     private boolean isLoading;
 
@@ -39,12 +39,8 @@ public class AlbumViewModel extends ViewModel {
         return currentPage;
     }
 
-    public int incrementPage() {
+    public int incrementToNextPage() {
         currentPage++;
-        return currentPage;
-    }
-    public int decrementPage() {
-        currentPage--;
         return currentPage;
     }
 
