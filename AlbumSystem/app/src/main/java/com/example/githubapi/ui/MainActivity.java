@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
     /**
      * This method is used init the presenter.
-     * Only is necessary to create the presenter if it is in the view model.
+     * Only is necessary to create the presenter if it is not in the view model.
      */
     private void initPresenter() {
         if (viewModel.getPresenter() == null) {
