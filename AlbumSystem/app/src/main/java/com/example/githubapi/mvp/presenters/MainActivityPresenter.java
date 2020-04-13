@@ -1,5 +1,7 @@
 package com.example.githubapi.mvp.presenters;
 
+import android.content.Context;
+
 import com.example.githubapi.models.AlbumResponseModel;
 import com.example.githubapi.mvp.contracts.MainActivityContract;
 import com.example.githubapi.mvp.usecases.GetAlbum;
@@ -7,9 +9,10 @@ import com.example.githubapi.mvp.usecases.GetAlbum;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class MainActivityPresenter implements MainActivityContract.Presenter {
 
@@ -17,16 +20,16 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     private GetAlbum getAlbum;
 
     /*
-    * The main activity Presenter retrieves the data from the Model,
-    * applies the UI logic and manages the state of the View,
-    * decides what to display and reacts to user input notifications
-    * from the View.
-    *
-    * TODO We could improve the code using dagger2 to inject dependences
-    *      and Rxjava that can deal with complex requests using the pattern observer.
-    * */
+     * The main activity Presenter retrieves the data from the Model,
+     * applies the UI logic and manages the state of the View,
+     * decides what to display and reacts to user input notifications
+     * from the View.
+     *
+     * TODO We could improve the code using dagger2 to inject dependences
+     *      and Rxjava that can deal with complex requests using the pattern observer.
+     * */
 
-    public MainActivityPresenter( GetAlbum getAlbum) {
+    public MainActivityPresenter(GetAlbum getAlbum) {
         this.getAlbum = getAlbum;
     }
 
@@ -36,11 +39,12 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     }
 
     @Override
-    public void getAlbum(int albumId) {
+    public void getAlbum(Context context, int albumId) {
         //calling the use case
-        getAlbum.getAlbum(albumId, new Callback<List<AlbumResponseModel>>() {
+        getAlbum.getAlbum(context, albumId, new Callback<List<AlbumResponseModel>>() {
+
             @Override
-            public void onResponse(Response<List<AlbumResponseModel>> response, Retrofit retrofit) {
+            public void onResponse(Call<List<AlbumResponseModel>> call, Response<List<AlbumResponseModel>> response) {
                 List<AlbumResponseModel> responseModels = response.body();
                 if (responseModels.isEmpty()) {
                     view.stateEmpty();
@@ -49,11 +53,10 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
             }
 
             @Override
-            public void onFailure(Throwable t) {
-
+            public void onFailure(Call<List<AlbumResponseModel>> call, Throwable t) {
                 view.stateError();
-            }
 
+            }
         });
     }
 

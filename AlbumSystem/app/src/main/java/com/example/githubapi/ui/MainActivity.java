@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         progressBar.setVisibility(View.VISIBLE);
         statusMessage.setVisibility(View.GONE);
         tryAgain.setVisibility(View.GONE);
-        viewModel.getPresenter().getAlbum(viewModel.getCurrentPage());
+        viewModel.getPresenter().getAlbum(MainActivity.this, viewModel.getCurrentPage());
     }
 
     /**

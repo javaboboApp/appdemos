@@ -9,7 +9,7 @@ import com.example.githubapi.utils.Constants;
 
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
+
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -26,7 +26,7 @@ public class RetrofitInstance {
             OkHttpClient client = new OkHttpClient
                     .Builder()
                     .addInterceptor(new LoggingInterceptor())
-                    .addInterceptor(new ResponseInterceptor())
+                    .addInterceptor(new ResponseInterceptor(context))
                     .cache(cache)
                     .build();
 
