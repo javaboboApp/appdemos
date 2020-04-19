@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/frag_home"
+        android:icon="@drawable/ic_forum_black_24dp"
+        android:title="@string/home"></item>
+    <item
+        android:id="@+id/frag_comment"
+        android:icon="@drawable/ic_comment_black_24dp"
+        android:title="@string/comments"></item>
+
+</menu>

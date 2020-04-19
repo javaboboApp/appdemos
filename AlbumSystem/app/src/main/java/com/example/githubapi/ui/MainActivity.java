@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,7 +16,8 @@ import android.widget.Toast;
 
 
 import com.example.githubapi.R;
-import com.example.githubapi.adapters.GithubAdapter;
+import com.example.githubapi.adapters.AlbumAdapter;
+import com.example.githubapi.adapters.RecyclerViewListener;
 import com.example.githubapi.models.AlbumResponseModel;
 import com.example.githubapi.mvp.contracts.MainActivityContract;
 import com.example.githubapi.mvp.presenters.MainActivityPresenter;
@@ -39,9 +41,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private TextView statusMessage;
-    private GithubAdapter githubAdapter;
+    private AlbumAdapter githubAdapter;
     private AlbumViewModel viewModel;
     private Button tryAgain;
+
+    public static final String TAG_ALBUM = "MainActivityAlbum";
     private final String TAG_STATUS_MSG = "STATUS_MSG";
 
     private final String TAG_PROGRESSBAR_VISIBLE = "PROGRESSBAR_VISIBLE";
@@ -109,7 +113,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
      */
 
     private void initAdapter() {
-        githubAdapter = new GithubAdapter(viewModel.getAlbumResponseModels());
+        githubAdapter = new AlbumAdapter(viewModel.getAlbumResponseModels(), new RecyclerViewListener() {
+            @Override
+            public void onItemClicked(AlbumResponseModel albumResponseModel) {
+                Intent intent = new Intent(MainActivity.this, AlbumsDetailsActivity.class);
+                intent.putExtra(TAG_ALBUM, albumResponseModel);
+                startActivity(intent);
+
+            }
+        });
         recyclerView.setAdapter(githubAdapter);
     }
 
